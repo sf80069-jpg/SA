@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #FFFBF5;
+  --color-foreground: #1C1008;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #1C1008;
+  --color-primary: #F97316;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #FEF3C7;
+  --color-secondary-foreground: #92400E;
+  --color-muted: #F5EDE2;
+  --color-muted-foreground: #78604A;
+  --color-accent: #10B981;
+  --color-accent-foreground: #FFFFFF;
+  --color-border: #E8D5BC;
+  --color-ring: #F97316;
+  --color-destructive: #EF4444;
+  --font-sans: 'Nunito', sans-serif;
+  --font-display: 'Fraunces', serif;
+  --radius: 0.75rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+}
+
+button, a {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #E8D5BC; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #D4B896; }
+
+.figma-custom-code-fragment {
+  display: contents;
+}
+
+.figma-bypass-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 2147483647;
+  transform: translateY(-150%);
+  border-radius: 6px;
+  background: #111827;
+  color: #fff;
+  padding: 8px 12px;
+  font: 600 14px/1.2 system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.figma-bypass-link:focus {
+  transform: translateY(0);
+}
