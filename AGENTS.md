@@ -87,7 +87,7 @@ Payload admin/API routes:
 - `src/payload.config.ts` - Payload configuration
 - `src/payload-types.ts` - Auto-generated TypeScript types
 
-## Key Files
+## Key Files///////
 
 - `src/app/(frontend)/layout.tsx` - Root layout component
 - `src/app/(frontend)/page.tsx` - Home page component
