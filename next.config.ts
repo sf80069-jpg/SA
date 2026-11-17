@@ -30,11 +30,15 @@ const nextConfig: NextConfig = {
     root: path.resolve(dirname),
   },
   output: 'standalone',
+  outputFileTracingIncludes: {
+    '/*': ['./data/**/*'],
+  },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
+        hostname: '**',
       },
     ],
   },
