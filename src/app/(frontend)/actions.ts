@@ -62,10 +62,12 @@ type PublicationInput = {
   locationY?: number
   photo?: string
 }
-
 const SESSION_COOKIE = 'app-session'
 const avatars = ['🐶', '🐱', '🐰', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯', '🐮', '🐸', '🐺'] as const
-const filePath = path.join(process.cwd(), 'data', 'app-store.json')
+const initialFilePath = path.join(process.cwd(), 'data', 'app-store.json')
+const filePath = process.env.VERCEL
+  ? path.join('/tmp', 'data', 'app-store.json')
+  : initialFilePath
 
 const cleanText = (value: unknown, maxLength: number) =>
   typeof value === 'string' ? value.trim().slice(0, maxLength) : ''
@@ -82,20 +84,33 @@ const normalizeImageDataUrl = (value: unknown): string | undefined => {
   return trimmed
 }
 
-const ensureStore = async (): Promise<Store> => {
-  await fs.mkdir(path.dirname(filePath), { recursive: true })
+const parseStore = (content: string): Store => {
+  const parsed = JSON.parse(content) as Partial<Store>
+  return {
+    users: Array.isArray(parsed.users) ? parsed.users : [],
+    publications: Array.isArray(parsed.publications) ? parsed.publications : [],
+  }
+}
 
+const ensureStore = async (): Promise<Store> => {
   try {
     const content = await fs.readFile(filePath, 'utf8')
-    const parsed = JSON.parse(content) as Partial<Store>
-    return {
-      users: Array.isArray(parsed.users) ? parsed.users : [],
-      publications: Array.isArray(parsed.publications) ? parsed.publications : [],
-    }
+    return parseStore(content)
   } catch {
-    const defaultStore: Store = { users: [], publications: [] }
-    await fs.writeFile(filePath, JSON.stringify(defaultStore, null, 2), 'utf8')
-    return defaultStore
+    let seedStore: Store = { users: [], publications: [] }
+
+    if (filePath !== initialFilePath) {
+      try {
+        const initialContent = await fs.readFile(initialFilePath, 'utf8')
+        seedStore = parseStore(initialContent)
+      } catch {
+        // Si no existe archivo semilla, inicia vacío
+      }
+    }
+
+    await fs.mkdir(path.dirname(filePath), { recursive: true })
+    await fs.writeFile(filePath, JSON.stringify(seedStore, null, 2), 'utf8')
+    return seedStore
   }
 }
 
@@ -103,7 +118,6 @@ const saveStore = async (store: Store) => {
   await fs.mkdir(path.dirname(filePath), { recursive: true })
   await fs.writeFile(filePath, JSON.stringify(store, null, 2), 'utf8')
 }
-
 const setSessionCookie = async (userId: string) => {
   const cookieStore = await cookies()
   cookieStore.set(SESSION_COOKIE, userId, {
